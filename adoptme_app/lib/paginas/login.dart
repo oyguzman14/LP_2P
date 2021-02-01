@@ -1,4 +1,5 @@
 import 'package:adoptme_app/paginas/menu.dart';
+import 'package:adoptme_app/paginas/registrar.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget{
@@ -124,7 +125,10 @@ class _LoginPageState extends State<LoginPage>{
               ),
               elevation: 10.0,
               color: Colors.amber,
-              onPressed: () {}
+              onPressed: () {
+                Route route = MaterialPageRoute(builder: (bc) => RegistrarForm());
+                Navigator.of(context).push(route);
+              }
           );
         }
     );

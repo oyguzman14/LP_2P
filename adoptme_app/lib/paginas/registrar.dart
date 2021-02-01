@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class AdoptarForm extends StatefulWidget {
+class RegistrarForm extends StatefulWidget {
   @override
   State<StatefulWidget> createState(){
-    return AdoptarFormState();
+    return RegistrarFormState();
   }
 }
 
-class AdoptarFormState extends State<AdoptarForm> {
+class RegistrarFormState extends State<RegistrarForm> {
 
   String _nombre;
-  String _ocupacion;
+  String _cedula;
   String _correo;
   String _telefono;
   String _ciudad;
-  String _edad;
+  String _contra;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -32,9 +32,9 @@ class AdoptarFormState extends State<AdoptarForm> {
     );
   }
 
-  Widget _buildOcupacion(){
+  Widget _buildCedula(){
     return TextFormField(
-      decoration: InputDecoration(labelText: "Ocupacion"),
+      decoration: InputDecoration(labelText: "Cedula"),
       validator: (String value){
         if(value.isEmpty){
           return "Este campo es requerido";
@@ -73,7 +73,7 @@ class AdoptarFormState extends State<AdoptarForm> {
   }
   Widget _buildCiudad(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Ciudad'),
+      decoration: InputDecoration(labelText: 'Direccion'),
       validator: (String value){
         if(value.isEmpty){
           return "Este campo es requerido";
@@ -97,6 +97,19 @@ class AdoptarFormState extends State<AdoptarForm> {
       },
     );
   }
+  Widget _buildContrasena(){
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Contrasena'),
+      validator: (String value){
+        if(value.isEmpty){
+          return "Este campo es requerido";
+        }
+      } ,
+      onSaved: (String value){
+        _name: value;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,47 +122,45 @@ class AdoptarFormState extends State<AdoptarForm> {
         margin: EdgeInsets.all(24),
         child: Form(
             key: _formKey,
-            child: ListView(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _buildNombre(),
-                    _buildTelefono(),
-                    _buildCorreo(),
-                    _buildCiudad(),
-                    _buildEdad(),
-                    _buildOcupacion(),
-                    SizedBox(height: 10),
-                    RaisedButton(
-                      child: Text("Ingresar",
-                          style: TextStyle(color: Colors.blue, fontSize: 16)
-                      ),
-                      onPressed: () {
-                        if(!_formKey.currentState.validate()){
-                          return;
-                        }
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Datos guardados"),
-                            content: Text("Su postulacion ha sido enviada"),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text("Ok"),
-                                onPressed: (){
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildNombre(),
+                _buildCedula(),
+                _buildTelefono(),
+                _buildCorreo(),
+                _buildCiudad(),
+                _buildContrasena(),
+
+                SizedBox(height: 10),
+                RaisedButton(
+                  child: Text("Ingresar",
+                  style: TextStyle(color: Colors.blue, fontSize: 16)
+                  ),
+                  onPressed: () {
+                    if(!_formKey.currentState.validate()){
+                      return;
+                    }
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Datos guardados"),
+                        content: Text("Se ha realizado el registro con exito"),
+                        actions: <Widget>[
+                          FlatButton(
+                              child: Text("Ok"),
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
                           ),
-                        );
-                      },
-                    )
-                  ],
-                ),
+                        ],
+                      ),
+                    );
+
+                  },
+                )
               ],
-            )
+            ),
           ),
       ),
     );

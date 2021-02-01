@@ -79,6 +79,7 @@ class _MenuState extends State<Menu> {
 
   @override
   void initState(){
+    BotonAdoptar();
     _listado();
     super.initState();
   }
@@ -119,12 +120,13 @@ class _MenuState extends State<Menu> {
           ],
         ),
       ),
-      body: new GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 0.1,
-        childAspectRatio: 0.700,
-        children: listamos,
-      ),
+      body:
+          new GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 0.1,
+            childAspectRatio: 0.700,
+            children: listamos,
+          ),
     );
   }
 }
@@ -273,3 +275,4 @@ class BotonAdoptar extends StatelessWidget {
     );
   }
 }
+
