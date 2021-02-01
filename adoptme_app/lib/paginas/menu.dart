@@ -1,4 +1,5 @@
 import 'package:adoptme_app/paginas/adoptarForm.dart';
+import 'package:adoptme_app/paginas/perfil.dart';
 import 'package:flutter/material.dart';
 
 
@@ -103,9 +104,9 @@ class _MenuState extends State<Menu> {
             new ListTile(
               title: new Text("Cuenta"),
               trailing: new Icon(Icons.portrait),
-              // onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-              //     builder: (BuildContext context) => Perfil()
-              // )),
+              onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) => Perfil()
+              )),
             ),
             new Divider(),
             new ListTile(
