@@ -1,3 +1,4 @@
+import 'package:adoptme_app/paginas/adopcionForm.dart';
 import 'package:adoptme_app/paginas/adoptarForm.dart';
 import 'package:adoptme_app/paginas/perfil.dart';
 import 'package:flutter/material.dart';
@@ -113,9 +114,9 @@ class _MenuState extends State<Menu> {
             new ListTile(
               title: new Text("Dar en adopcion"),
               trailing: new Icon(Icons.assignment_rounded),
-              // onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-              //   builder: (BuildContext context) => AdopcionForm(),
-              // )),
+              onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => AdopcionForm(),
+              )),
             ),
           ],
         ),
