@@ -1,3 +1,4 @@
+import 'package:adoptme_app/paginas/adoptarForm.dart';
 import 'package:flutter/material.dart';
 
 
@@ -261,8 +262,8 @@ class BotonAdoptar extends StatelessWidget {
                     style: TextStyle(color: Colors.orange, fontSize: 16)
                 ),
                 onPressed: () {
-                  // Route route = MaterialPageRoute(builder: (bc) => AdoptarForm());
-                  // Navigator.of(context).push(route);
+                  Route route = MaterialPageRoute(builder: (bc) => AdoptarForm());
+                  Navigator.of(context).push(route);
                 }
             )
           ],
