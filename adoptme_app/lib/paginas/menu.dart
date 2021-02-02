@@ -1,3 +1,4 @@
+
 import 'package:adoptme_app/paginas/adopcionForm.dart';
 import 'package:adoptme_app/paginas/adoptarForm.dart';
 import 'package:adoptme_app/paginas/perfil.dart';
@@ -13,7 +14,10 @@ class _MenuState extends State<Menu> {
   //Aqui se crea el arreglo de datos de imagenes, nombre, edad y ciudad
   List<Container> listamos = List();
 
+  String valor = "";
+
   var arreglox = [
+    {"nombre": "", "imagen": "", "raza": "", "especie": "", "sexo": "", "edad": "", "ciudad": ""},
     {"nombre": "Heroe", "imagen": "perrito1.png", "raza": "Labrador", "especie": "Perro", "sexo": "Masculino", "edad": "3 meses", "ciudad": "Guayaquil"},
     {"nombre": "Princesa", "imagen": "perrito2.png", "raza": "Labrador", "especie": "Perro", "sexo": "Femenino","edad": "2 meses", "ciudad": "Cuenca"},
     {"nombre": "Rocky", "imagen": "perrito3.png", "raza": "Pitbull", "especie": "Perro", "sexo": "Masculino","edad": "1 anio", "ciudad": "Ambato"},
@@ -28,9 +32,50 @@ class _MenuState extends State<Menu> {
   //recorrer el listado
 
   _listado() async {
+
+    listamos.add(new Container(
+      margin: EdgeInsets.all(24),
+      child: Form(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Filtrar:',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Text(
+              'Ciudad/Especie:',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            TextField(
+              onChanged: (texto) {
+                valor = texto;
+              },
+            ),
+            SizedBox(height: 10),
+            RaisedButton(
+                child: Text("Filtrar",
+                    style: TextStyle(color: Colors.orange, fontSize: 16)
+                ),
+                onPressed: () {
+                  Route route = MaterialPageRoute(builder: (bc) => AdoptarForm());
+                  Navigator.of(context).push(route);
+                }
+            )
+          ],
+        ),
+      ),
+    )
+    );
+
     for(var i = 0; i < arreglox.length; i++){
       final arregloxyz = arreglox[i];
       final String imagen = arregloxyz["imagen"];
+
 
       listamos.add(new Container(
         padding: new EdgeInsets.all(10.0),
@@ -121,13 +166,14 @@ class _MenuState extends State<Menu> {
           ],
         ),
       ),
-      body:
-          new GridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0.1,
-            childAspectRatio: 0.700,
-            children: listamos,
-          ),
+      body: new GridView.count(
+        crossAxisCount: 2,
+        mainAxisSpacing: 0.1,
+        childAspectRatio: 0.700,
+        children: listamos,
+
+      ),
+
     );
   }
 }
