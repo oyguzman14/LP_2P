@@ -134,7 +134,7 @@ class RegistrarFormState extends State<RegistrarForm> {
 
                 SizedBox(height: 10),
                 RaisedButton(
-                  child: Text("Ingresar",
+                  child: Text("Registrar",
                   style: TextStyle(color: Colors.blue, fontSize: 16)
                   ),
                   onPressed: () {
