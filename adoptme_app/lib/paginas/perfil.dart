@@ -24,6 +24,7 @@ class PerfilState extends State<Perfil> {
         backgroundColor: Colors.orange,
       ),
       body: SingleChildScrollView(
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -61,36 +62,34 @@ class PerfilState extends State<Perfil> {
                   ]
               ),
             ),
-            new Container(
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    _crearCard1(),
-                    _crearCard2(),
-                    _crearCard3(),
-                    _crearCard4()
-                  ]
-                )
-              )
-            )
+            Padding(padding: EdgeInsets.all(16.0),
+            child: Container(
+                  child: Center(
+                      child: Column(
+                          children: <Widget>[
+                            Text(
+                              'Mascotas que has puesto en adopcion:',
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                            ),
+                            Padding(padding: EdgeInsets.all(16.0), child: _crearCard2()),
+                            Text(
+                              'Mascotas a las que quieres adoptar',
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                            ),
+                            Padding(padding: EdgeInsets.all(16.0), child: _crearCard4()),
+                          ]
+                      )
+                  ),
+            ))
           ],
         ),
 
         )
       );
-  }
-
-  Widget  _crearCard1() {
-    return Card(
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            Text("Mascotas que has puesto en adopcion",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),),
-          ]
-        )
-      ),
-    );
   }
 
   Widget _crearCard2() {
@@ -134,19 +133,6 @@ class PerfilState extends State<Perfil> {
             style: new TextStyle(fontSize: 15.0),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _crearCard3() {
-    return Card(
-      child: Container(
-          child: Column(
-              children: <Widget>[
-                Text("Mascotas a las que quieres adoptar",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),),
-              ]
-          )
       ),
     );
   }
