@@ -3,9 +3,17 @@ import 'package:adoptme_app/paginas/adopcionForm.dart';
 import 'package:adoptme_app/paginas/adoptarForm.dart';
 import 'package:adoptme_app/paginas/perfil.dart';
 import 'package:flutter/material.dart';
+import '../api/apiMascota.dart';
+import '../modelos/usuario.dart';
+import '../modelos/mascota.dart';
+import 'login.dart';
 
 
 class Menu extends StatefulWidget {
+
+  Usuario usuario;
+  Menu(this.usuario);
+
   _MenuState createState() => _MenuState();
 }
 
@@ -13,26 +21,61 @@ class _MenuState extends State<Menu> {
 
   //Aqui se crea el arreglo de datos de imagenes, nombre, edad y ciudad
   List<Container> listamos = List();
-
+  MascotaProvider provider = MascotaProvider();
+  List<Mascota> arreglox =[];
+  //int id_mascota=0;
   String valor = "";
+  bool inicial = true;
 
-  var arreglox = [
-    {"nombre": "", "imagen": "", "raza": "", "especie": "", "sexo": "", "edad": "", "ciudad": ""},
-    {"nombre": "Heroe", "imagen": "perrito1.png", "raza": "Labrador", "especie": "Perro", "sexo": "Masculino", "edad": "3 meses", "ciudad": "Guayaquil"},
-    {"nombre": "Princesa", "imagen": "perrito2.png", "raza": "Labrador", "especie": "Perro", "sexo": "Femenino","edad": "2 meses", "ciudad": "Cuenca"},
-    {"nombre": "Rocky", "imagen": "perrito3.png", "raza": "Pitbull", "especie": "Perro", "sexo": "Masculino","edad": "1 anio", "ciudad": "Ambato"},
-    {"nombre": "Dulce", "imagen": "perrito4.png", "raza": "Labrador", "especie": "Perro", "sexo": "Femenino","edad": "11 meses", "ciudad": "Guayaquil"},
-    {"nombre": "Fancy", "imagen": "perrito5.png", "raza": "Lassie", "especie": "Perro", "sexo": "Femenino","edad": "1 anio y medio", "ciudad": "Guayaquil"},
-    {"nombre": "Japi", "imagen": "gatito1.png", "raza": "Mestizo", "especie": "Gato", "sexo": "masculino","edad": "1 mes", "ciudad": "Zaruma"},
-    {"nombre": "Rubio", "imagen": "gatito2.png", "raza": "Mestizo", "especie": "Gato", "sexo": "masculino","edad": "3 meses", "ciudad": "Duran"},
-    {"nombre": "Grace", "imagen": "gatito3.png", "raza": "Persa", "especie": "Gato", "sexo": "masculino","edad": "1 anio", "ciudad": "Santa Elena"},
-    {"nombre": "Pucca", "imagen": "gatito4.png", "raza": "Siames", "especie": "Gato", "sexo": "masculino","edad": "10 meses", "ciudad": "Santa Elena"},
-  ];
+  _MenuState(){
+    inicial = true;
+  }
+
+  var imagenes=[ "w.png","perrito1.png", "perrito2.png", "perrito3.png", "perrito4.png", "perrito5.png", "gatito1.png", " ", " ","gatito2.png", "gatito3.png", "gatito4.png"];
+
+
+  // var arreglox = [
+  //   {"nombre": "", "imagen": "w.png", "raza": "", "especie": "", "sexo": "", "edad": "", "ciudad": ""},
+  //   {"nombre": "Heroe", "imagen": "perrito1.png", "raza": "Labrador", "especie": "Perro", "sexo": "Masculino", "edad": "3 meses", "ciudad": "Guayaquil"},
+  //   {"nombre": "Princesa", "imagen": "perrito2.png", "raza": "Labrador", "especie": "Perro", "sexo": "Femenino","edad": "2 meses", "ciudad": "Cuenca"},
+  //   {"nombre": "Rocky", "imagen": "perrito3.png", "raza": "Pitbull", "especie": "Perro", "sexo": "Masculino","edad": "1 anio", "ciudad": "Ambato"},
+  //   {"nombre": "Dulce", "imagen": "perrito4.png", "raza": "Labrador", "especie": "Perro", "sexo": "Femenino","edad": "11 meses", "ciudad": "Guayaquil"},
+  //   {"nombre": "Fancy", "imagen": "perrito5.png", "raza": "Lassie", "especie": "Perro", "sexo": "Femenino","edad": "1 anio y medio", "ciudad": "Guayaquil"},
+  //   {"nombre": "Japi", "imagen": "gatito1.png", "raza": "Mestizo", "especie": "Gato", "sexo": "masculino","edad": "1 mes", "ciudad": "Zaruma"},
+  //   {"nombre": "Rubio", "imagen": "gatito2.png", "raza": "Mestizo", "especie": "Gato", "sexo": "masculino","edad": "3 meses", "ciudad": "Duran"},
+  //   {"nombre": "Grace", "imagen": "gatito3.png", "raza": "Persa", "especie": "Gato", "sexo": "masculino","edad": "1 anio", "ciudad": "Santa Elena"},
+  //   {"nombre": "Pucca", "imagen": "gatito4.png", "raza": "Siames", "especie": "Gato", "sexo": "masculino","edad": "10 meses", "ciudad": "Santa Elena"},
+  // ];
+
+
+  //Obtener todas las mascotas
+  llenarMascotas() async {
+
+    Mascota m= Mascota(id: 0, nombre: "", raza: "", especie: "", sexo: "", edad: "", ciudad: "", idUser: -1);
+    arreglox.add(m);
+    arreglox.addAll(
+      await provider.getMascotasAdopcion()
+    );
+  }
+
+  filtrarMascotas(String filtro) async {
+
+    Mascota m= Mascota(id: 0, nombre: "", raza: "", especie: "", sexo: "", edad: "", ciudad: "", idUser: -1);
+    arreglox.add(m);
+    arreglox.addAll(
+      await provider.filtrarMascotas(filtro)
+    );
+
+  }
 
   //recorrer el listado
-
   _listado() async {
 
+    if(inicial){
+      await llenarMascotas();
+    }else{
+      await filtrarMascotas(valor);
+    }
     listamos.add(new Container(
       margin: EdgeInsets.all(24),
       child: Form(
@@ -61,9 +104,18 @@ class _MenuState extends State<Menu> {
                 child: Text("Filtrar",
                     style: TextStyle(color: Colors.orange, fontSize: 16)
                 ),
-                onPressed: () {
-                  Route route = MaterialPageRoute(builder: (bc) => AdoptarForm());
-                  Navigator.of(context).push(route);
+                onPressed: (){
+                  setState(() {
+                    if(valor.isEmpty){
+                      inicial = true;
+                    }else{
+                      inicial = false;
+                    }
+                    listamos = [];
+                    arreglox = [];
+                    _listado();
+                    valor = "";
+                  });
                 }
             )
           ],
@@ -74,8 +126,7 @@ class _MenuState extends State<Menu> {
 
     for(var i = 0; i < arreglox.length; i++){
       final arregloxyz = arreglox[i];
-      final String imagen = arregloxyz["imagen"];
-
+      final String imagen = imagenes[arregloxyz.id];
 
       listamos.add(new Container(
         padding: new EdgeInsets.all(10.0),
@@ -83,22 +134,24 @@ class _MenuState extends State<Menu> {
           child: new Column(
             children: <Widget>[
               new Hero(
-                tag: arregloxyz['nombre'],
+                tag: arregloxyz.nombre,
                 child: new Material(
                   child: new InkWell(
                     onTap: () =>
                         Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) => new Detalle(
-                              nombre: arregloxyz["nombre"],
+                              nombre: arregloxyz.nombre,
                               imagen: imagen,
-                              raza: arregloxyz["raza"],
-                              especie: arregloxyz["especie"],
-                              sexo: arregloxyz["sexo"],
-                              edad: arregloxyz["edad"],
-                              ciudad: arregloxyz["ciudad"]
+                              raza: arregloxyz.raza,
+                              especie: arregloxyz.especie,
+                              sexo: arregloxyz.sexo,
+                              edad: arregloxyz.edad,
+                              ciudad: arregloxyz.ciudad,
+                              usuario: widget.usuario,
+                              masc: arregloxyz,
                           ),
                         )),
-                    child: new Image.asset(
+                    child:new Image.asset(
                         "images/$imagen",
                         fit: BoxFit.contain
                     ),
@@ -109,11 +162,11 @@ class _MenuState extends State<Menu> {
                 padding: new EdgeInsets.all(10.0),
               ),
               new Text(
-                arregloxyz["nombre"],
+                arregloxyz.nombre,
                 style: new TextStyle(fontSize: 20.0),
               ),
               new Text(
-                arregloxyz["edad"],
+                arregloxyz.edad,
                 style: new TextStyle(fontSize: 15.0),
               ),
             ],
@@ -125,7 +178,6 @@ class _MenuState extends State<Menu> {
 
   @override
   void initState(){
-    BotonAdoptar();
     _listado();
     super.initState();
   }
@@ -152,17 +204,26 @@ class _MenuState extends State<Menu> {
               title: new Text("Cuenta"),
               trailing: new Icon(Icons.portrait),
               onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (BuildContext context) => Perfil()
+                  builder: (context) => Perfil(widget.usuario, imagenes)
               )),
             ),
-            new Divider(),
+            new Divider(thickness: 2, height: 5,),
             new ListTile(
               title: new Text("Dar en adopcion"),
               trailing: new Icon(Icons.assignment_rounded),
               onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext context) => AdopcionForm(),
+                builder: (context) => AdopcionForm(widget.usuario),
               )),
             ),
+            new Divider(thickness: 2, height: 5,),
+            new ListTile(
+              title: new Text("Salir"),
+              trailing: new Icon(Icons.exit_to_app),
+              onTap: () => Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginPage()), (route) => false
+              ),
+            ),
+            new Divider(thickness: 2, height: 5,),
           ],
         ),
       ),
@@ -171,7 +232,6 @@ class _MenuState extends State<Menu> {
         mainAxisSpacing: 0.1,
         childAspectRatio: 0.700,
         children: listamos,
-
       ),
 
     );
@@ -181,7 +241,7 @@ class _MenuState extends State<Menu> {
 //creamos el metodo detalle
 //este se usa cuando pulsamos para ver segunda pantalla la descripcion del ejercicio
 class Detalle extends StatelessWidget {
-  Detalle({this.nombre, this.imagen, this.raza,this.especie, this.sexo, this.edad,this.ciudad});
+  Detalle({this.nombre, this.imagen, this.raza,this.especie, this.sexo, this.edad,this.ciudad, this.usuario, this.masc});
   final String nombre;
   final String imagen;
   final String raza;
@@ -189,6 +249,8 @@ class Detalle extends StatelessWidget {
   final String sexo;
   final String edad;
   final String ciudad;
+  Usuario usuario;
+  Mascota masc;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +264,7 @@ class Detalle extends StatelessWidget {
                 tag: nombre,
                 child: new Material(
                   child: new InkWell(
-                    child: new Image.asset(
+                    child:new Image.asset(
                       "images/$imagen",
                       fit: BoxFit.cover,
                     ),
@@ -218,8 +280,7 @@ class Detalle extends StatelessWidget {
           //     sexo: sexo,
           //     ciudad: ciudad,
           // ),
-          new BotonAdoptar(
-          )
+          new BotonAdoptar(this.usuario, this.masc)
         ],
       ),
     );
@@ -298,8 +359,14 @@ class Informacion extends StatelessWidget {
 
 class BotonAdoptar extends StatelessWidget {
 
+  Usuario usuario;
+  Mascota mascota;
+
+  BotonAdoptar(this.usuario, this.mascota);
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       margin: EdgeInsets.all(24),
       child: Form(
@@ -312,7 +379,7 @@ class BotonAdoptar extends StatelessWidget {
                     style: TextStyle(color: Colors.orange, fontSize: 16)
                 ),
                 onPressed: () {
-                  Route route = MaterialPageRoute(builder: (bc) => AdoptarForm());
+                  Route route = MaterialPageRoute(builder: (bc) => AdoptarForm(this.usuario, this.mascota));
                   Navigator.of(context).push(route);
                 }
             )

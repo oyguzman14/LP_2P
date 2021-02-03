@@ -1,4 +1,8 @@
+import 'package:adoptme_app/api/apiUsuario.dart';
+import 'package:adoptme_app/modelos/usuario.dart';
 import 'package:flutter/material.dart';
+
+import 'menu.dart';
 
 class RegistrarForm extends StatefulWidget {
   @override
@@ -9,6 +13,7 @@ class RegistrarForm extends StatefulWidget {
 
 class RegistrarFormState extends State<RegistrarForm> {
 
+  UsuarioProvider provider = UsuarioProvider();
   String _nombre;
   String _cedula;
   String _correo;
@@ -25,6 +30,8 @@ class RegistrarFormState extends State<RegistrarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _nombre=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -39,6 +46,8 @@ class RegistrarFormState extends State<RegistrarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _cedula=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -52,6 +61,8 @@ class RegistrarFormState extends State<RegistrarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _telefono=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -65,6 +76,8 @@ class RegistrarFormState extends State<RegistrarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _correo=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -73,37 +86,30 @@ class RegistrarFormState extends State<RegistrarForm> {
   }
   Widget _buildCiudad(){
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Direccion'),
+      decoration: InputDecoration(labelText: 'Ciudad'),
       validator: (String value){
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _ciudad=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
       },
     );
   }
-  Widget _buildEdad(){
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Edad'),
-      validator: (String value){
-        if(value.isEmpty){
-          return "Este campo es requerido";
-        }
-      } ,
-      onSaved: (String value){
-        _name: value;
-      },
-    );
-  }
+
   Widget _buildContrasena(){
     return TextFormField(
+      keyboardType: TextInputType.visiblePassword,
       decoration: InputDecoration(labelText: 'Contrasena'),
       validator: (String value){
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _contra=value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -122,44 +128,35 @@ class RegistrarFormState extends State<RegistrarForm> {
         margin: EdgeInsets.all(24),
         child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildNombre(),
-                _buildCedula(),
-                _buildTelefono(),
-                _buildCorreo(),
-                _buildCiudad(),
-                _buildContrasena(),
-
-                SizedBox(height: 10),
-                RaisedButton(
-                  child: Text("Registrar",
-                  style: TextStyle(color: Colors.blue, fontSize: 16)
-                  ),
-                  onPressed: () {
-                    if(!_formKey.currentState.validate()){
-                      return;
-                    }
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Datos guardados"),
-                        content: Text("Se ha realizado el registro con exito"),
-                        actions: <Widget>[
-                          FlatButton(
-                              child: Text("Ok"),
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
-                          ),
-                        ],
-                      ),
-                    );
-
-                  },
-                )
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildNombre(),
+                  _buildCedula(),
+                  _buildCorreo(),
+                  _buildContrasena(),
+                  _buildTelefono(),
+                  _buildCiudad(),
+                  SizedBox(height: 10),
+                  RaisedButton(
+                    child: Text("Registrar",
+                    style: TextStyle(color: Colors.blue, fontSize: 16)
+                    ),
+                    onPressed: () async {
+                      if(!_formKey.currentState.validate()){
+                        return;
+                      }else{
+                        Usuario usuario = Usuario(email: _correo, contrasenia: _contra, nombreCompleto: _nombre, cedula: _cedula, telefono: _telefono, ciudad: _ciudad);
+                        if(await provider.insertarUsuario(usuario)){
+                          Route route = MaterialPageRoute(builder: (bc) => Menu(usuario));
+                          Navigator.of(context).pushAndRemoveUntil(route, (r)=>false);
+                        }
+                      }
+                    },
+                  )
+                ],
+              ),
             ),
           ),
       ),
