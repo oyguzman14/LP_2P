@@ -1,3 +1,5 @@
+import 'package:adoptme_app/api/apiUsuario.dart';
+import 'package:adoptme_app/modelos/usuario.dart';
 import 'package:adoptme_app/paginas/menu.dart';
 import 'package:adoptme_app/paginas/registrar.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,10 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPageState extends State<LoginPage>{
+  UsuarioProvider provider = UsuarioProvider();
+  String _email;
+  String _contra;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,7 +58,7 @@ class _LoginPageState extends State<LoginPage>{
                   labelText: "Correo Electronico",
                 ),
                 onChanged: (value) {
-
+                  _email=value;
                 }
             ),
           );
@@ -74,7 +80,7 @@ class _LoginPageState extends State<LoginPage>{
                 labelText: "Contrasena",
               ),
               onChanged: (value) {
-
+                _contra=value;
               },
             ),
           );
@@ -99,9 +105,29 @@ class _LoginPageState extends State<LoginPage>{
               ),
               elevation: 10.0,
               color: Colors.amber,
-              onPressed: () {
-                Route route = MaterialPageRoute(builder: (bc) => Menu());
-                Navigator.of(context).push(route);
+              onPressed: () async {
+
+                Usuario usuario = await provider.validarUsuario(_email, _contra);
+                if(usuario!=null){
+                  Route route = MaterialPageRoute(builder: (bc) => Menu(usuario));
+                  Navigator.of(context).pushAndRemoveUntil(route, (r)=>false);
+                }else{
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Error de inicio de sesion"),
+                      content: Text("El usuario o la contraseña es incorrecta"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("Ok"),
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
               }
           );
         }

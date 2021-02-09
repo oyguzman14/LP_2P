@@ -1,6 +1,18 @@
+import 'package:adoptme_app/api/apiFormulario.dart';
+import 'package:adoptme_app/modelos/formAdopcion.dart';
+import 'package:adoptme_app/modelos/mascota.dart';
+import 'package:adoptme_app/modelos/usuario.dart';
 import 'package:flutter/material.dart';
 
+import 'menu.dart';
+
 class AdoptarForm extends StatefulWidget {
+
+  Usuario usuario;
+  Mascota mascota;
+
+  AdoptarForm(this.usuario, this.mascota);
+
   @override
   State<StatefulWidget> createState(){
     return AdoptarFormState();
@@ -9,6 +21,7 @@ class AdoptarForm extends StatefulWidget {
 
 class AdoptarFormState extends State<AdoptarForm> {
 
+  FormProvider provider = FormProvider();
   String _nombre;
   String _ocupacion;
   String _correo;
@@ -25,6 +38,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _nombre = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -39,6 +54,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _ocupacion = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -52,6 +69,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _telefono = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -65,6 +84,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _correo = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -78,6 +99,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _ciudad = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -91,6 +114,8 @@ class AdoptarFormState extends State<AdoptarForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _edad = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -118,32 +143,35 @@ class AdoptarFormState extends State<AdoptarForm> {
                     _buildTelefono(),
                     _buildCorreo(),
                     _buildCiudad(),
-                    _buildEdad(),
                     _buildOcupacion(),
+                    _buildEdad(),
                     SizedBox(height: 10),
                     RaisedButton(
                       child: Text("Ingresar",
                           style: TextStyle(color: Colors.blue, fontSize: 16)
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if(!_formKey.currentState.validate()){
                           return;
                         }
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Datos guardados"),
-                            content: Text("Su postulacion ha sido enviada"),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text("Ok"),
-                                onPressed: (){
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                        );
+                        FormAdopcion formulario = FormAdopcion(nombre: _nombre, telefono: _telefono, email: _correo, ciudad: _ciudad, ocupacion: _ocupacion, edad: int.parse(_edad), idUser: widget.usuario.id, idMascota: widget.mascota.id);
+                        if(await provider.insertarFormulario(formulario)){
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Datos guardados"),
+                              content: Text("Sus datos han sido agregados correctamente"),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("Ok"),
+                                  onPressed: (){
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Menu(widget.usuario)), (route) => false);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                     )
                   ],

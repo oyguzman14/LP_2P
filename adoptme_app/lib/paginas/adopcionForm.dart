@@ -1,6 +1,16 @@
+import 'package:adoptme_app/api/apiMascota.dart';
+import 'package:adoptme_app/modelos/mascota.dart';
+import 'package:adoptme_app/modelos/usuario.dart';
 import 'package:flutter/material.dart';
 
+import 'menu.dart';
+
 class AdopcionForm extends StatefulWidget {
+
+  Usuario usuario;
+
+  AdopcionForm(this.usuario);
+
   @override
   State<StatefulWidget> createState(){
     return AdopcionFormState();
@@ -9,12 +19,14 @@ class AdopcionForm extends StatefulWidget {
 
 class AdopcionFormState extends State<AdopcionForm> {
 
+  MascotaProvider provider = MascotaProvider();
   String _nombre;
   String _raza;
   String _especie;
   String _sexo;
   String _edad;
   String _ciudad;
+  int id_user;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -25,6 +37,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _nombre = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -39,6 +53,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _raza = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -52,6 +68,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _especie = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -65,6 +83,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _sexo = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -78,6 +98,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _edad = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -91,6 +113,8 @@ class AdopcionFormState extends State<AdopcionForm> {
         if(value.isEmpty){
           return "Este campo es requerido";
         }
+        _ciudad = value;
+        return null;
       } ,
       onSaved: (String value){
         _name: value;
@@ -109,50 +133,54 @@ class AdopcionFormState extends State<AdopcionForm> {
         margin: EdgeInsets.all(24),
         child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildNombre(),
-                _buildRaza(),
-                _buildEspecie(),
-                _buildSexo(),
-                _buildEdad(),
-                _buildCiudad(),
-                SizedBox(height: 10),
-                RaisedButton(
-                  child: Text("Ingresar",
-                  style: TextStyle(color: Colors.blue, fontSize: 16)
-                  ),
-                  onPressed: () {
-                    if(!_formKey.currentState.validate()){
-                      return;
-                    }
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Datos guardados"),
-                        content: Text("Sus datos han sido agregados correctamente"),
-                        actions: <Widget>[
-                          FlatButton(
-                              child: Text("Ok"),
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                              },
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildNombre(),
+                  _buildRaza(),
+                  _buildEspecie(),
+                  _buildSexo(),
+                  _buildEdad(),
+                  _buildCiudad(),
+                  SizedBox(height: 10),
+                  RaisedButton(
+                    child: Text("Registrar",
+                    style: TextStyle(color: Colors.blue, fontSize: 16)
+                    ),
+                    onPressed: () async {
+                      if(!_formKey.currentState.validate()){
+                        return;
+                      }
+                      Mascota mascota = Mascota(nombre: _nombre, raza: _raza, especie: _especie, sexo: _sexo, edad: _edad, ciudad: _ciudad, idUser: widget.usuario.id);
+                      if(await provider.ingresarMascota(mascota)){
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Datos guardados"),
+                            content: Text("Sus datos han sido agregados correctamente"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("Ok"),
+                                onPressed: (){
+                                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Menu(widget.usuario)), (route) => false);
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-
-                    // _formKey.currentState.save();
-                    // print(_nombre);
-                    // print(_raza);
-                    // print(_especie);
-                    // print(_sexo);
-                    // print(_edad);
-                    // print(_ciudad);
-                  },
-                )
-              ],
+                        );
+                      }
+                      // _formKey.currentState.save();
+                      // print(_nombre);
+                      // print(_raza);
+                      // print(_especie);
+                      // print(_sexo);
+                      // print(_edad);
+                      // print(_ciudad);
+                    },
+                  )
+                ],
+              ),
             ),
           ),
       ),
