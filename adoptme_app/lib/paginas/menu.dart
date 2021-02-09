@@ -1,4 +1,3 @@
-
 import 'package:adoptme_app/paginas/adopcionForm.dart';
 import 'package:adoptme_app/paginas/adoptarForm.dart';
 import 'package:adoptme_app/paginas/perfil.dart';
@@ -389,4 +388,3 @@ class BotonAdoptar extends StatelessWidget {
     );
   }
 }
-
